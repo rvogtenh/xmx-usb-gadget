@@ -1,0 +1,40 @@
+--- a/drivers/usb/gadget/function/f_uac2.c	2026-11-15 22:12:40.417093500 +0000
++++ b/drivers/usb/gadget/function/f_uac2.c	2026-11-15 22:15:12.488549001 +0000
+@@ -108,19 +108,19 @@
+ 
+ static struct usb_string strings_fn[] = {
+ 	/* [STR_ASSOC].s = DYNAMIC, */
+-	[STR_IF_CTRL].s = "Topology Control",
+-	[STR_CLKSRC_IN].s = "Input Clock",
+-	[STR_CLKSRC_OUT].s = "Output Clock",
++	[STR_IF_CTRL].s = "XMX Audio",
++	[STR_CLKSRC_IN].s = "XMX Clock",
++	[STR_CLKSRC_OUT].s = "XMX Clock",
+ 	[STR_USB_IT].s = "USBH Out",
+ 	[STR_IO_IT].s = "USBD Out",
+ 	[STR_USB_OT].s = "USBH In",
+ 	[STR_IO_OT].s = "USBD In",
+ 	[STR_FU_IN].s = "Capture Volume",
+ 	[STR_FU_OUT].s = "Playback Volume",
+-	[STR_AS_OUT_ALT0].s = "Playback Inactive",
+-	[STR_AS_OUT_ALT1].s = "Playback Active",
+-	[STR_AS_IN_ALT0].s = "Capture Inactive",
+-	[STR_AS_IN_ALT1].s = "Capture Active",
++	[STR_AS_OUT_ALT0].s = "XMX Playback",
++	[STR_AS_OUT_ALT1].s = "XMX Playback",
++	[STR_AS_IN_ALT0].s = "XMX Capture",
++	[STR_AS_IN_ALT1].s = "XMX Capture",
+ 	{ },
+ };
+ 
+@@ -933,8 +933,8 @@
+ 		usb_in_ot_desc.bSourceID = io_in_it_desc.bTerminalID;
+ 	}
+ 
+-	usb_in_ot_desc.bCSourceID = in_clk_src_desc.bClockID;
+-	io_in_it_desc.bCSourceID = in_clk_src_desc.bClockID;
++	usb_in_ot_desc.bCSourceID = out_clk_src_desc.bClockID; /* XMX: shared clock */
++	io_in_it_desc.bCSourceID = out_clk_src_desc.bClockID; /* XMX: shared clock */
+ 	io_out_ot_desc.bCSourceID = out_clk_src_desc.bClockID;
+ 
+ 	if (FUOUT_EN(opts)) {

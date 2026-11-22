@@ -1,0 +1,66 @@
+--- a/drivers/usb/gadget/function/f_midi.c
++++ b/drivers/usb/gadget/function/f_midi.c
+@@ -40,8 +40,8 @@
+ MODULE_AUTHOR("Ben Williamson");
+ MODULE_LICENSE("GPL v2");
+ 
+-static const char f_midi_shortname[] = "f_midi";
+-static const char f_midi_longname[] = "MIDI Gadget";
++static const char f_midi_shortname[] = "XMX Midi"; /* XMX */
++static const char f_midi_longname[] = "XMX Midi"; /* XMX */
+ 
+ /*
+  * We can only handle 16 cables on one single endpoint, as cable numbers are
+@@ -210,7 +210,7 @@
+ #define STRING_FUNC_IDX			0
+ 
+ static struct usb_string midi_string_defs[] = {
+-	[STRING_FUNC_IDX].s = "MIDI function",
++	[STRING_FUNC_IDX].s = "XMX Midi",
+ 	{  } /* end of list */
+ };
+ 
+@@ -888,6 +888,7 @@
+ 		goto fail;
+ 	}
+ 	ac_interface_desc.iInterface = us[STRING_FUNC_IDX].id;
++	ms_interface_desc.iInterface = us[STRING_FUNC_IDX].id; /* XMX */
+ 
+ 	/* We have two interfaces, AudioControl and MIDIStreaming */
+ 	status = usb_interface_id(c, f);
+@@ -950,7 +951,7 @@
+ 		in_ext->bDescriptorSubtype	= USB_MS_MIDI_IN_JACK;
+ 		in_ext->bJackType		= USB_MS_EXTERNAL;
+ 		in_ext->bJackID			= jack++;
+-		in_ext->iJack			= 0;
++		in_ext->iJack = us[STRING_FUNC_IDX].id; /* XMX */
+ 		midi_function[i++] = (struct usb_descriptor_header *) in_ext;
+ 
+ 		out_emb->bLength		= USB_DT_MIDI_OUT_SIZE(1);
+@@ -961,7 +962,7 @@
+ 		out_emb->bNrInputPins		= 1;
+ 		out_emb->pins[0].baSourcePin	= 1;
+ 		out_emb->pins[0].baSourceID	= in_ext->bJackID;
+-		out_emb->iJack			= 0;
++		out_emb->iJack = us[STRING_FUNC_IDX].id; /* XMX */
+ 		midi_function[i++] = (struct usb_descriptor_header *) out_emb;
+ 
+ 		/* link it to the endpoint */
+@@ -978,7 +979,7 @@
+ 		in_emb->bDescriptorSubtype	= USB_MS_MIDI_IN_JACK;
+ 		in_emb->bJackType		= USB_MS_EMBEDDED;
+ 		in_emb->bJackID			= jack++;
+-		in_emb->iJack			= 0;
++		in_emb->iJack = us[STRING_FUNC_IDX].id; /* XMX */
+ 		midi_function[i++] = (struct usb_descriptor_header *) in_emb;
+ 
+ 		out_ext->bLength =		USB_DT_MIDI_OUT_SIZE(1);
+@@ -987,7 +988,7 @@
+ 		out_ext->bJackType =		USB_MS_EXTERNAL;
+ 		out_ext->bJackID =		jack++;
+ 		out_ext->bNrInputPins =		1;
+-		out_ext->iJack =		0;
++		out_ext->iJack = us[STRING_FUNC_IDX].id; /* XMX */
+ 		out_ext->pins[0].baSourceID =	in_emb->bJackID;
+ 		out_ext->pins[0].baSourcePin =	1;
+ 		midi_function[i++] = (struct usb_descriptor_header *) out_ext;

@@ -1,0 +1,16 @@
+# On top of rk3308_linux_defconfig (Rockchip develop-5.10 @ 955e34ae, Linux 5.10.198),
+# matched to the stock XMX kernel (vermagic "5.10.198 SMP preempt mod_unload aarch64").
+CONFIG_USB_CONFIGFS=m
+CONFIG_USB_LIBCOMPOSITE=m
+CONFIG_USB_CONFIGFS_F_UAC2=y
+CONFIG_USB_CONFIGFS_F_MIDI=y        # missing in the stock image
+CONFIG_USB_CONFIGFS_NCM=y           # optional: USB network
+CONFIG_SND_RAWMIDI=m
+CONFIG_PREEMPT=y
+CONFIG_DYNAMIC_DEBUG=y
+CONFIG_STACKPROTECTOR_STRONG=y
+# CONFIG_MODVERSIONS is not set
+# The stock kernel has no wireless extensions. rk3308_linux_defconfig enables them via
+# WLAN drivers, which changes struct net_device (dev_addr 744 instead of 728):
+# CONFIG_WLAN is not set
+# CONFIG_WIRELESS_EXT is not set

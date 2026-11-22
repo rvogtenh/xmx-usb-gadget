@@ -1,0 +1,10 @@
+--- a/rk3308-roc-cc.dts (decompiled from XMX BOOT/rk3308-roc-cc.dtb)
++++ b/rk3308-roc-cc.dts
+@@ -475,6 +475,7 @@
+ 			phandle = <0x16>;
+ 
+ 			otg-port {
++				rockchip,vbus-always-on;
+ 				interrupts = <0x00 0x43 0x04 0x00 0x44 0x04 0x00 0x45 0x04>;
+ 				interrupt-names = "otg-bvalid", "otg-id", "linestate";
+ 				#phy-cells = <0x00>;

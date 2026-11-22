@@ -22,7 +22,7 @@ MIDI=1          # 1 = add USB MIDI (needs /media/BOOT/modules/usb_f_midi.ko)
 NET=ncm         # ncm | ecm | 0 = USB network (needs u_ether.ko + usb_f_$NET.ko in modules/)
 NET_IP=10.77.0.1
 WATCH=1         # 1 = re-bind the gadget when the link hangs (e.g. after the Mac wakes from sleep)
-DAV=1           # 1 = WebDAV file server on the USB link (Finder: http://10.77.0.1:8080/), needs NET
+DAV=0           # 1 = WebDAV file server on the USB link (Finder: http://10.77.0.1:8080/), needs NET + webdav.py
 DAV_RO=0        # 1 = WebDAV read-only
 [ -f /media/BOOT/gadget.conf ] && . /media/BOOT/gadget.conf
 echo "mode=$MODE srate=$SRATE chmask=$CHMASK ssize=$SSIZE sync=$SYNC midi=$MIDI net=$NET"

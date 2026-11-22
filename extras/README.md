@@ -2,11 +2,21 @@
 
 ## webdav.py — XMX files in the Finder
 
-Copy `webdav.py` to `BOOT/`. `gadget.sh` starts it after the USB network is up (`DAV=1`), bound to
+Off by default. Copy `webdav.py` to `BOOT/` and set `DAV=1` in `BOOT/gadget.conf`; `gadget.sh` then starts it
+after the USB network is up, bound to
 `10.77.0.1:8080` only (no password, reachable only over the USB cable). macOS metadata files (`._*`,
 `.DS_Store`) are discarded, so they never end up in `plugins/`.
 
 Finder → Go → Connect to Server → `http://10.77.0.1:8080/`
+
+> **Handle with care.** WebDAV gives write access to the live BOOT partition while the XMX is running.
+> - Don't change, rename or delete presets, plugins or system files (`perccmd.sh`, `gadget.sh`, the DTB, `modules/`)
+>   while Synthor or Trax is running. Reboot after copying plugins.
+> - Back up the card before larger changes.
+> - Copying samples to an unused folder is fine.
+> - If in doubt, use `DAV_RO=1` (read-only).
+
+Settings in `gadget.conf`: `DAV=1` on, `DAV_RO=1` read-only.
 
 ## mac/xmx-automount.sh — mount automatically
 

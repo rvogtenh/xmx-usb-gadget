@@ -8,7 +8,7 @@ Unofficial, not supported by Percussa or TheTechnobear.
 |---|---|
 | USB audio | class-compliant device "XMX Audio", 8 in / 8 out, 48 kHz, 16 bit (macOS, Linux) |
 | USB MIDI | 1 port each way, "XMX Midi" (works with Synthor and TraxHost/TB plugins) |
-| USB network | `ssh root@10.77.0.1`, optional WebDAV file access from the Finder |
+| USB network | `ssh root@10.77.0.1`; optional Finder access via WebDAV (`extras/`) |
 
 What is **not** there yet: the USB audio channels are not routed into Synthor or Trax. On the XMX they appear
 as a separate ALSA card (`UAC2Gadget`) that no app uses so far.
@@ -41,14 +41,14 @@ Note: a TB Apps update may replace `perccmd.sh` — add the line again afterward
 
 ## Settings (`BOOT/gadget.conf`)
 
-`NET=0` no network · `MIDI=0` no MIDI · `WATCH=0` no link watchdog · `DAV=0` no WebDAV · `DAV_RO=1` WebDAV read-only.
+`NET=0` no network · `MIDI=0` no MIDI · `WATCH=0` no link watchdog.
+Optional WebDAV server from `extras/` (off by default, handle with care — see `extras/README.md`): `DAV=1` on · `DAV_RO=1` read-only.
 
 ## Known issues
 
 - After the Mac wakes from a longer sleep, the link can hang. A watchdog in `gadget.sh` re-binds the gadget
   (TraxHost from v260403 reconnects MIDI by itself; older versions may not).
 - Occasionally after boot the computer → XMX audio had gaps until the gadget was re-bound. Cause not found yet.
-- Don't overwrite plugins or presets via WebDAV while Trax/Synthor uses them.
 
 ## Contents
 

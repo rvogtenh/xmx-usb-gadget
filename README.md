@@ -57,6 +57,11 @@ locked to the codec without resampling. macOS ignores the feedback, so with a Ma
 Small buffers are fine once the IRQ is off CPU 0: reading `UAC2Gadget` with 128-frame periods (2.7 ms) was clean.
 (Before the fix, small periods glitched heavily; that was the same CPU 0 overload, not a gadget limit.)
 
+Round-trip latency computer → XMX → computer (Mac, XMX looping the audio back with `extras/usbloop.py`, measured
+with `extras/mac/hallatency.swift` on the device timeline): **128 frames (2.7 ms) for USB both ways, plus the loop
+period on the XMX** — 4.0 ms with 64-frame periods, 5.3 ms with 128. The computer's own I/O buffer and CoreAudio's
+safety offsets (here 50 out + 74 in frames) come on top.
+
 ## Known issues
 
 - After the Mac wakes from a longer sleep, the link can hang. A watchdog in `gadget.sh` re-binds the gadget

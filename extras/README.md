@@ -56,3 +56,12 @@ python3 /tmp/clockdrift.py 60     # codec vs. gadget rate, drift in ppm, matchin
 codec. Adjust the card numbers at the top if they differ. `sinecheck.py` finds discontinuities in a recorded
 sine. `mac/actualrate.swift` prints the rate CoreAudio reports for a device (`swiftc -O actualrate.swift`).
 Try a pitch: `amixer -c UAC2Gadget cset numid=1 1000037` (1000000 = nominal).
+
+## usbloop.py, mac/hallatency.swift — round-trip latency
+
+`usbloop.py` runs on the XMX and sends the USB audio straight back (capture → playback, via libasound/ctypes,
+pinned to CPU 2 with SCHED_FIFO): `python3 /tmp/usbloop.py 64 4 30` (period, periods, seconds).
+`hallatency.swift` on the Mac clicks on output 1 every 0.5 s and times the click on input 1:
+`swiftc -O hallatency.swift -o hallatency`, then `./hallatency "XMX Audio" 10 64` (last value = Mac buffer).
+Result 23.11.2026: 192 frames (4.0 ms) with 64-frame periods, 256 (5.3 ms) with 128; i.e. 128 frames for USB
+both ways plus one XMX period. 32-frame periods lose clicks (too tight for Python).

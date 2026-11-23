@@ -41,8 +41,20 @@ Note: a TB Apps update may replace `perccmd.sh` — add the line again afterward
 
 ## Settings (`BOOT/gadget.conf`)
 
-`NET=0` no network · `MIDI=0` no MIDI · `WATCH=0` no link watchdog.
+`NET=0` no network · `MIDI=0` no MIDI · `WATCH=0` no link watchdog ·
+`IRQ_CPU=0` keep the USB interrupt on CPU 0 (default 1, see below).
 Optional WebDAV server from `extras/` (off by default, handle with care — see `extras/README.md`): `DAV=1` on · `DAV_RO=1` read-only.
+
+## Clean audio: USB interrupt on CPU 1
+
+The XMX kernel runs with `isolcpus=1,2,3`, so CPU 0 carries every interrupt and every unpinned thread. With the
+USB (dwc2) interrupt there, computer → XMX audio lost 0.5–1 % of the packets (clicks). `gadget.sh` therefore moves
+it to CPU 1 at boot; measured afterwards: no discontinuities, only crystal drift (about 25–37 ppm).
+Tools: `extras/clockdrift.py` (codec vs. gadget rate), `extras/sinecheck.py` (finds discontinuities in a sine).
+
+Clock drift: a Linux host follows the feedback endpoint ("Capture Pitch" control on the XMX), so the host can be
+locked to the codec without resampling. macOS ignores the feedback, so with a Mac the XMX side has to absorb the drift.
+Read `UAC2Gadget` on the XMX with large periods (≥ 2400 frames); 512 frames glitches.
 
 ## Known issues
 

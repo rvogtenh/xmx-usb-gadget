@@ -24,6 +24,7 @@ NET_IP=10.77.0.1
 WATCH=1         # 1 = re-bind the gadget when the link hangs (e.g. after the Mac wakes from sleep)
 DAV=0           # 1 = WebDAV file server on the USB link (Finder: http://10.77.0.1:8080/), needs NET + webdav.py
 DAV_RO=0        # 1 = WebDAV read-only
+IRQ_CPU=1       # CPU for the dwc2 USB interrupt (0 = leave on CPU 0). See below.
 [ -f /media/BOOT/gadget.conf ] && . /media/BOOT/gadget.conf
 echo "mode=$MODE srate=$SRATE chmask=$CHMASK ssize=$SSIZE sync=$SYNC midi=$MIDI net=$NET"
 # Debug: KEEP_OOPS=1 in gadget.conf -> a kernel oops no longer reboots the XMX
@@ -136,6 +137,19 @@ if [ -d $G ]; then echo "gadget exists, leaving it"; else
 	fi
 
 	echo $UDC > UDC && echo "bound to $UDC"
+
+	# USB interrupt off CPU 0 (23.11.2026). The XMX kernel runs with isolcpus=1,2,3,
+	# so CPU 0 carries every IRQ and every unpinned thread (most TraxHost threads too).
+	# With the dwc2 IRQ there, host -> XMX audio lost 0.5-1 % of the packets (clicks);
+	# on CPU 1 the stream is clean (measured: 0 discontinuities, -37 ppm = real drift).
+	if [ "$IRQ_CPU" != 0 ]; then
+		IRQ=$(grep -m1 "ff400000.usb" /proc/interrupts | cut -d: -f1 | tr -d ' ')
+		if [ -n "$IRQ" ] && printf '%x' $((1 << IRQ_CPU)) > /proc/irq/$IRQ/smp_affinity; then
+			echo "usb irq $IRQ -> cpu $(cat /proc/irq/$IRQ/smp_affinity_list)"
+		else
+			echo "usb irq: could not move (irq=$IRQ)"
+		fi
+	fi
 
 	if [ "$NET" != 0 ]; then
 		IF=$(cat functions/$NET.usb0/ifname)

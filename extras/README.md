@@ -40,3 +40,19 @@ Stop: `launchctl bootout gui/$(id -u)/local.xmx-automount`
 Play / record a sine straight through CoreAudio (device clock, no ffmpeg — ffmpeg's AVFoundation capture
 drops buffers and fakes glitches). `swiftc -O halplay.swift -o halplay`, then
 `./halplay "XMX Audio" 10 440 0.1` and `./halrec "XMX Audio" 10 out.wav`.
+
+## clockdrift.py, sinecheck.py, mac/actualrate.swift — clock and glitch measurement
+
+Run on the XMX (copy to `/tmp`, Python 3 is on the stock image). The host plays a sine into "XMX Audio"
+(`halplay`), and a reader keeps the gadget capture stream open:
+
+```sh
+arecord -q -D hw:UAC2Gadget -f S16_LE -c 8 -r 48000 -t raw -d 90 \
+        --buffer-size=19200 --period-size=2400 /dev/null &
+python3 /tmp/clockdrift.py 60     # codec vs. gadget rate, drift in ppm, matching "Capture Pitch"
+```
+
+`clockdrift.py` reads `hw_ptr` from `/proc/asound/card*/pcm0c/sub0/status`, so TraxHost/Synthor can keep the
+codec. Adjust the card numbers at the top if they differ. `sinecheck.py` finds discontinuities in a recorded
+sine. `mac/actualrate.swift` prints the rate CoreAudio reports for a device (`swiftc -O actualrate.swift`).
+Try a pitch: `amixer -c UAC2Gadget cset numid=1 1000037` (1000000 = nominal).

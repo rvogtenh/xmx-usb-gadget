@@ -5,7 +5,7 @@ usage: sinecheck.py file.raw   (S16_LE, 8 channels, 48 kHz; channel 1 is checked
 For a clean sine x[n+1] + x[n-1] = 2 cos(w) x[n]; every jump leaves a large residual.
 Record on the XMX while the host plays a sine into "XMX Audio", e.g.
   arecord -D hw:UAC2Gadget -f S16_LE -c 8 -r 48000 -t raw -d 8 \
-          --buffer-size=19200 --period-size=2400 /tmp/g.raw
+          --period-size=256 --buffer-size=768 /tmp/g.raw
 """
 import struct, math, sys
 d=open(sys.argv[1],"rb").read(); n=len(d)//16

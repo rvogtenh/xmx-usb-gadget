@@ -48,7 +48,7 @@ Run on the XMX (copy to `/tmp`, Python 3 is on the stock image). The host plays 
 
 ```sh
 arecord -q -D hw:UAC2Gadget -f S16_LE -c 8 -r 48000 -t raw -d 90 \
-        --buffer-size=19200 --period-size=2400 /dev/null &
+        --period-size=256 --buffer-size=768 /dev/null &
 python3 /tmp/clockdrift.py 60     # codec vs. gadget rate, drift in ppm, matching "Capture Pitch"
 ```
 

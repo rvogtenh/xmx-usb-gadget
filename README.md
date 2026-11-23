@@ -54,7 +54,8 @@ Tools: `extras/clockdrift.py` (codec vs. gadget rate), `extras/sinecheck.py` (fi
 
 Clock drift: a Linux host follows the feedback endpoint ("Capture Pitch" control on the XMX), so the host can be
 locked to the codec without resampling. macOS ignores the feedback, so with a Mac the XMX side has to absorb the drift.
-Read `UAC2Gadget` on the XMX with large periods (≥ 2400 frames); 512 frames glitches.
+Small buffers are fine once the IRQ is off CPU 0: reading `UAC2Gadget` with 128-frame periods (2.7 ms) was clean.
+(Before the fix, small periods glitched heavily; that was the same CPU 0 overload, not a gadget limit.)
 
 ## Known issues
 
